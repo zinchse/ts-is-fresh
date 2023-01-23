@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>extraction_utils &mdash; TS IS FRESH 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #e0b97e" >
+            <a href="../index.html" class="icon icon-home"> TS IS FRESH
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../text/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../text/algorithm.html">Algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../text/toy_example.html">Toy Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../text/source_code.html">Source code</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #e0b97e" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TS IS FRESH</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">extraction_utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for extraction_utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">tsfresh</span> <span class="kn">import</span> <span class="n">extract_features</span>
+<span class="kn">from</span> <span class="nn">tsfresh.feature_extraction</span> <span class="kn">import</span> <span class="n">EfficientFCParameters</span>
+<span class="kn">from</span> <span class="nn">tsfresh.utilities.dataframe_functions</span> <span class="kn">import</span> <span class="n">roll_time_series</span><span class="p">,</span> <span class="n">impute</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+
+
+<div class="viewcode-block" id="timestamp_to_features"><a class="viewcode-back" href="../text/extraction_utils.html#extraction_utils.timestamp_to_features">[docs]</a><span class="k">def</span> <span class="nf">timestamp_to_features</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract 4 numeric characteristics from the time feature:</span>
+<span class="sd">    hour, minute, second, millisecond.</span>
+
+<span class="sd">    :param t: str: timestamp string</span>
+<span class="sd">    :return: Tuple[int, int, int, int]: time, minute, second, and millisecond of timestamp t</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">t</span><span class="o">.</span><span class="n">hour</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">minute</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">second</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">microsecond</span><span class="o">//</span><span class="mi">1000</span></div>
+
+
+<div class="viewcode-block" id="bcv_extract_features"><a class="viewcode-back" href="../text/extraction_utils.html#extraction_utils.bcv_extract_features">[docs]</a><span class="k">def</span> <span class="nf">bcv_extract_features</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">,</span>
+        <span class="n">n_blocks</span><span class="p">,</span>
+        <span class="n">target_col</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">n_windows</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">window_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+        <span class="n">lags</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span>
+        <span class="n">fc_parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Implement the process of block cross validation of time series with</span>
+<span class="sd">    counting of window features within each block:</span>
+
+<span class="sd">    - divide the entire dataframe evenly into ``n_tests`` blocks</span>
+
+<span class="sd">    - inside each block calculate statistics on ``n_windows`` windows of size ``windows_size``</span>
+
+<span class="sd">    - as a target column make % change in ``target_col`` to simplify the task for the tree based models</span>
+
+<span class="sd">    - creates lag features with numbers from ``lags``</span>
+
+
+<span class="sd">    Depending on the ``mode``, window feature evaluations are satisfactorily</span>
+<span class="sd">    either using the ``tsfresh`` methods (parallel mode) or using the</span>
+<span class="sd">    ``window_featurizing`` method (default mode). The difference is that the first method can be parallelized, but in</span>
+<span class="sd">    the process of execution, the size of memory can increase many times over</span>
+<span class="sd">    (due to ``roll_time_series`` function). In the second method, the amount of</span>
+<span class="sd">    memory does not grow, but it will not work to parallelize the process.</span>
+
+<span class="sd">    **Note**</span>
+
+<span class="sd">    - all missing values are simply deleted, thus one validation block may contain non-sequential data;</span>
+
+<span class="sd">    - the process of evaluating the features itself is parallel in any case, the only difference in mode is how the</span>
+<span class="sd">      windows is formed;</span>
+
+<span class="sd">    :param df: pd.DataFrame: table with data for which it is necessary to carry out block cross-validation with counting</span>
+<span class="sd">              window features</span>
+
+<span class="sd">    :param n_blocks: int: number of blocks for block cross validation</span>
+
+<span class="sd">    :param target_col: str: the name of the column with the target variable</span>
+<span class="sd">    :param n_jobs: int: number of cores for parallel calculations (for extracting/rolling)</span>
+<span class="sd">    :param n_windows: int: the number of windows for which it is necessary to calculate window functions within each block</span>
+<span class="sd">    :param window_size: int: number of elements to be used in counting each window function</span>
+<span class="sd">    :param lags: Optional[List[int]]: numbers for which it is necessary to create lag features</span>
+<span class="sd">    :param mode: str: windowing mode for feature extract</span>
+<span class="sd">    :param fc_parameters: Optional[Dict[str, Optional[List[str]]]]: a dictionary containing information about which window functions should be calculated</span>
+<span class="sd">     and with  what parameters</span>
+<span class="sd">    :return: List[pd.DataFrame]: list of ``n_tests`` dataframes of ``n_windows`` size with the addition of new features</span>
+<span class="sd">     (window functions, lags, &#39;target&#39; column)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">assert</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;default&#39;</span> <span class="ow">or</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;parallel&#39;</span><span class="p">,</span> \
+        <span class="sa">f</span><span class="s1">&#39;mode must be &quot;default&quot; or &quot;parallel&quot;, not </span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s1">!&#39;</span>
+
+    <span class="k">if</span> <span class="n">lags</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">lags</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        
+    <span class="k">for</span> <span class="n">lag</span> <span class="ow">in</span> <span class="n">lags</span><span class="p">:</span>
+        <span class="n">df</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;price_lag</span><span class="si">{</span><span class="n">lag</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">target_col</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">lag</span><span class="p">)</span>
+
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">target_col</span><span class="p">]</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span>
+                          <span class="n">df</span><span class="p">[</span><span class="n">target_col</span><span class="p">])</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="n">target_col</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="s1">&#39;event_time&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">fold_size</span> <span class="o">=</span> <span class="n">n</span> <span class="o">//</span> <span class="n">n_blocks</span>
+
+    <span class="k">assert</span> <span class="n">fold_size</span> <span class="o">&gt;=</span> <span class="n">window_size</span> <span class="o">+</span> <span class="n">n_windows</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;the parameters n_tests, &#39;</span> \
+        <span class="sa">f</span><span class="s1">&#39;train_size, window_size, n_windows are inconsistent, there is &#39;</span> \
+        <span class="sa">f</span><span class="s1">&#39;not enough space to count window features in the fold: </span><span class="se">\n</span><span class="s1">&#39;</span> \
+        <span class="sa">f</span><span class="s1">&#39;fold_size=</span><span class="si">{</span><span class="n">fold_size</span><span class="si">}</span><span class="s1"> &lt; </span><span class="si">{</span><span class="n">window_size</span> <span class="o">+</span> <span class="n">n_windows</span> <span class="o">-</span> <span class="mi">1</span><span class="si">}</span><span class="s1">=window_size+n_windows-1 &#39;</span>
+
+    <span class="k">assert</span> <span class="nb">max</span><span class="p">(</span><span class="n">lags</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">fold_size</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;data leak, max(lags)=</span><span class="si">{</span><span class="nb">max</span><span class="p">(</span><span class="n">lags</span><span class="p">)</span><span class="si">}</span><span class="s1"> is too much&#39;</span>
+
+    <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;hour&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">,</span> <span class="s1">&#39;sec&#39;</span><span class="p">,</span> <span class="s1">&#39;ms&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">timestamp_to_features</span><span class="p">(</span><span class="n">date</span><span class="p">)</span> <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">event_time</span><span class="p">]</span>
+    <span class="n">blocks</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_blocks</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;current block: </span><span class="si">{</span><span class="n">n_blocks</span> <span class="o">-</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">n_blocks</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;==&#39;</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="mi">20</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_blocks</span> <span class="o">-</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_blocks</span><span class="p">)</span> <span class="o">+</span>
+              <span class="s1">&#39;--&#39;</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="mi">20</span> <span class="o">*</span> <span class="p">((</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_blocks</span><span class="p">)))</span>
+
+        <span class="n">end_block</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">fold_size</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">block</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">end_block</span> <span class="o">-</span> <span class="n">window_size</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">n_windows</span> <span class="o">+</span>
+                       <span class="mi">1</span><span class="p">:</span><span class="n">end_block</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;parallel&#39;</span><span class="p">:</span>
+            <span class="c1"># take advantage of the parallel execution feature of tsfresh,</span>
+            <span class="c1"># but it makes the memory size grow a lot!</span>
+            <span class="n">block</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">rolled_block</span> <span class="o">=</span> <span class="n">roll_time_series</span><span class="p">(</span><span class="n">block</span><span class="p">,</span>
+                                            <span class="n">column_id</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
+                                            <span class="n">column_sort</span><span class="o">=</span><span class="s2">&quot;event_time&quot;</span><span class="p">,</span>
+                                            <span class="n">max_timeshift</span><span class="o">=</span><span class="n">window_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                                            <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
+                                            <span class="n">min_timeshift</span><span class="o">=</span><span class="n">window_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">new_features</span> <span class="o">=</span> <span class="n">extract_features</span><span class="p">(</span><span class="n">timeseries_container</span><span class="o">=</span><span class="n">rolled_block</span><span class="p">,</span>
+                                            <span class="n">column_id</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
+                                            <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
+                                            <span class="n">column_sort</span><span class="o">=</span><span class="s2">&quot;event_time&quot;</span><span class="p">,</span>
+                                            <span class="n">column_value</span><span class="o">=</span><span class="n">target_col</span><span class="p">,</span>
+                                            <span class="n">impute_function</span><span class="o">=</span><span class="n">impute</span><span class="p">,</span>
+                                            <span class="n">show_warnings</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                            <span class="n">default_fc_parameters</span><span class="o">=</span><span class="n">fc_parameters</span>
+                                            <span class="p">)</span>
+
+            <span class="n">block_featurized</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">window_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">block_featurized</span><span class="p">[</span><span class="n">new_features</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_features</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">block_featurized</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;id&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span>
+            <span class="c1"># let&#39;s calculate the window functions through our function</span>
+            <span class="n">block_featurized</span> <span class="o">=</span> <span class="n">window_featurize</span><span class="p">(</span><span class="n">block</span><span class="p">,</span>
+                                                <span class="n">n_windows</span><span class="o">=</span><span class="n">n_windows</span><span class="p">,</span>
+                                                <span class="n">window_size</span><span class="o">=</span><span class="n">window_size</span><span class="p">,</span>
+                                                <span class="n">target_col</span><span class="o">=</span><span class="n">target_col</span><span class="p">,</span>
+                                                <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
+                                                <span class="n">fc_parameters</span><span class="o">=</span><span class="n">fc_parameters</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Wrong mode!&#39;</span><span class="p">)</span>
+
+        <span class="c1"># because of the timestamp_to_features call, this feature is no longer needed</span>
+        <span class="n">block_featurized</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;event_time&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">blocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">block_featurized</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">blocks</span></div>
+
+
+<div class="viewcode-block" id="window_featurize"><a class="viewcode-back" href="../text/extraction_utils.html#extraction_utils.window_featurize">[docs]</a><span class="k">def</span> <span class="nf">window_featurize</span><span class="p">(</span><span class="n">df</span><span class="p">,</span>
+                     <span class="n">target_col</span><span class="p">,</span>
+                     <span class="n">n_windows</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                     <span class="n">window_size</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+                     <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                     <span class="n">fc_parameters</span><span class="o">=</span><span class="kc">None</span>
+                     <span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    To calculate features from ``tsfresh``, we need to</span>
+<span class="sd">    have some piece of the time series. The</span>
+<span class="sd">    ``tsfresh.utilities.dataframe_functions.roll_time_series``</span>
+<span class="sd">    method makes the dataset larger by an amount equal to the size</span>
+<span class="sd">    of the window. To avoid this problem, it will process each</span>
+<span class="sd">    window separately.</span>
+
+<span class="sd">    :param df: pd.DataFrame: table with data for which it is necessary to calculate</span>
+<span class="sd">     window features</span>
+<span class="sd">    :param target_col: str: the name of the column with the target variable</span>
+<span class="sd">    :param n_windows: int: the number of windows for which it is necessary</span>
+<span class="sd">     to calculate window functions</span>
+<span class="sd">    :param window_size: int: number of elements to be used in counting each window function</span>
+<span class="sd">    :param n_jobs: int: number of cores for parallel execution</span>
+<span class="sd">    :param fc_parameters: Dict[str, Optional[List[str]]]: a dictionary containing information about which window functions</span>
+<span class="sd">     should be calculated and with what parameters</span>
+<span class="sd">    :return: pd.DataFrame: dataframe of ``num_windows`` rows with counted window functions</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">fc_parameters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fc_parameters</span> <span class="o">=</span> <span class="n">EfficientFCParameters</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s1">&#39;event_time&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">assert</span> <span class="s1">&#39;event_time&#39;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;even_time there no exist, df.columns:</span><span class="se">\n</span><span class="si">{</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="n">window_size</span> <span class="o">+</span> <span class="n">n_windows</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;small df&#39;</span>
+
+    <span class="n">new_features</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_windows</span><span class="p">):</span>
+        <span class="n">end_window</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span>
+        <span class="n">window</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">end_window</span> <span class="o">-</span> <span class="n">window_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span><span class="n">end_window</span><span class="p">]</span>
+        <span class="n">window</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="n">new_features</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span>
+            <span class="n">extract_features</span><span class="p">(</span><span class="n">timeseries_container</span><span class="o">=</span><span class="n">window</span><span class="p">,</span>
+                             <span class="n">column_id</span><span class="o">=</span><span class="s2">&quot;id&quot;</span><span class="p">,</span>
+                             <span class="n">column_sort</span><span class="o">=</span><span class="s2">&quot;event_time&quot;</span><span class="p">,</span>
+                             <span class="n">column_value</span><span class="o">=</span><span class="n">target_col</span><span class="p">,</span>
+                             <span class="n">impute_function</span><span class="o">=</span><span class="n">impute</span><span class="p">,</span>
+                             <span class="n">show_warnings</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                             <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
+                             <span class="n">default_fc_parameters</span><span class="o">=</span><span class="n">fc_parameters</span><span class="p">),</span>
+            <span class="n">new_features</span>
+        <span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="n">n_windows</span><span class="p">:]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="n">new_features</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)],</span>
+        <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Zinchenko Sergey.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

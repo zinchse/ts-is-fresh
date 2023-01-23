@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TS IS FRESH &mdash; TS IS FRESH 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Introduction" href="text/introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #e0b97e" >
+            <a href="#" class="icon icon-home"> TS IS FRESH
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="text/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="text/algorithm.html">Algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="text/toy_example.html">Toy Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="text/source_code.html">Source code</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #e0b97e" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">TS IS FRESH</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">TS IS FRESH</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com//https://github.com/mordiggian174/hft_timeseries/blob/index.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <a class="reference internal image-reference" href="_images/ts-is-fresh_logo.png"><img alt="_images/ts-is-fresh_logo.png" class="align-center" src="_images/ts-is-fresh_logo.png" style="width: 70%;" /></a>
+<section id="ts-is-fresh">
+<h1>TS IS FRESH<a class="headerlink" href="#ts-is-fresh" title="Permalink to this heading"></a></h1>
+<section id="time-series-importance-based-selection-and-feature-extraction-on-basis-of-scalable-hypothesis-tests">
+<h2>Time Series Importance based Selection and FeatuRe Extraction on basis of Scalable Hypothesis tests<a class="headerlink" href="#time-series-importance-based-selection-and-feature-extraction-on-basis-of-scalable-hypothesis-tests" title="Permalink to this heading"></a></h2>
+<p>This is the documentation of <strong>ts-is-fresh</strong>. Algorithm implements the idea of combining the selection of features by
+their importance and the generation of features using the <a class="reference external" href="https://github.com/blue-yonder/tsfresh/">tsfresh</a> library :)</p>
+<p>Project came from the task of building important features for high-frequency trading.</p>
+<p>Here is an idea that combines:</p>
+<ul class="simple">
+<li><p>analysis of the similarity of price behavior for different currencies</p></li>
+<li><p>automatic generation of statistical indicators by a certain time window (from <code class="docutils literal notranslate"><span class="pre">tsfresh</span></code>)</p></li>
+<li><p>feature selection through statistical hypothesis tests (from <code class="docutils literal notranslate"><span class="pre">tsfresh</span></code>)</p></li>
+<li><p>decreasing the dimensionality of the feature space through the search for weakly correlated features</p></li>
+<li><p>counting feature importance values (including <code class="docutils literal notranslate"><span class="pre">shap</span></code> values) through block cross validation</p></li>
+</ul>
+<section id="contents">
+<h3>Contents<a class="headerlink" href="#contents" title="Permalink to this heading"></a></h3>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="text/introduction.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="text/introduction.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/introduction.html#what-problem-does-ts-is-fresh-solve">What problem does <strong>ts-is-fresh</strong> solve?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/introduction.html#how-does-it-solve-this-problem">How does it solve this problem?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/introduction.html#and-why-exactly-in-this-way">And why exactly in this way?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="text/algorithm.html">Algorithm</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="text/algorithm.html#preprocessing">Preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/algorithm.html#the-basic-version-of-the-algorithm-working-with-a-single-time-series">The basic version of the algorithm - working with a single time series</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/algorithm.html#advanced-version-of-the-algorithm-take-into-account-the-context">Advanced version of the algorithm - take into account the context</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="text/toy_example.html">Toy Example</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="text/toy_example.html#data">Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/toy_example.html#block-cross-validation">Block Cross Validation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/toy_example.html#stats-selection">Stats Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/toy_example.html#importance-selection">Importance Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="text/toy_example.html#remarks">Remarks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="text/source_code.html">Source code</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="text/extraction_utils.html">extraction_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="text/extraction_utils.html#extraction_utils.bcv_extract_features"><code class="docutils literal notranslate"><span class="pre">bcv_extract_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="text/extraction_utils.html#extraction_utils.timestamp_to_features"><code class="docutils literal notranslate"><span class="pre">timestamp_to_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="text/extraction_utils.html#extraction_utils.window_featurize"><code class="docutils literal notranslate"><span class="pre">window_featurize()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="text/preprocessing_utils.html">preprocessing_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="text/preprocessing_utils.html#preprocessing_utils.load_tables"><code class="docutils literal notranslate"><span class="pre">load_tables()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="text/preprocessing_utils.html#preprocessing_utils.quantize_table"><code class="docutils literal notranslate"><span class="pre">quantize_table()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="text/preprocessing_utils.html#preprocessing_utils.save_tables"><code class="docutils literal notranslate"><span class="pre">save_tables()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="text/preprocessing_utils.html#preprocessing_utils.separate_and_save"><code class="docutils literal notranslate"><span class="pre">separate_and_save()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="text/preprocessing_utils.html#preprocessing_utils.triple_dot"><code class="docutils literal notranslate"><span class="pre">triple_dot()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="text/selection_utils.html">selection_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="text/selection_utils.html#selection_utils.get_fitted_models"><code class="docutils literal notranslate"><span class="pre">get_fitted_models()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="text/selection_utils.html#selection_utils.get_importance"><code class="docutils literal notranslate"><span class="pre">get_importance()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="text/selection_utils.html#selection_utils.get_stats"><code class="docutils literal notranslate"><span class="pre">get_stats()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="text/selection_utils.html#selection_utils.importance_select_features"><code class="docutils literal notranslate"><span class="pre">importance_select_features()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="text/selection_utils.html#selection_utils.stats_select_features"><code class="docutils literal notranslate"><span class="pre">stats_select_features()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="indices-and-tables">
+<h3>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="text/introduction.html" class="btn btn-neutral float-right" title="Introduction" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Zinchenko Sergey.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

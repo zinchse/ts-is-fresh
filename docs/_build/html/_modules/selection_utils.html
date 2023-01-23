@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>selection_utils &mdash; TS IS FRESH 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #e0b97e" >
+            <a href="../index.html" class="icon icon-home"> TS IS FRESH
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../text/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../text/algorithm.html">Algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../text/toy_example.html">Toy Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../text/source_code.html">Source code</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #e0b97e" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TS IS FRESH</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">selection_utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for selection_utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">shap</span>
+<span class="kn">import</span> <span class="nn">xgboost</span>
+<span class="kn">from</span> <span class="nn">xgboost</span> <span class="kn">import</span> <span class="n">XGBRegressor</span>
+<span class="kn">from</span> <span class="nn">tsfresh.feature_selection.relevance</span> <span class="kn">import</span> <span class="n">calculate_relevance_table</span>
+
+
+<div class="viewcode-block" id="stats_select_features"><a class="viewcode-back" href="../text/selection_utils.html#selection_utils.stats_select_features">[docs]</a><span class="k">def</span> <span class="nf">stats_select_features</span><span class="p">(</span><span class="n">relevance_table</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Using a table with the statistical significance of each feature,</span>
+<span class="sd">    returns only low-correlated relevant features.</span>
+
+<span class="sd">    It is assumed that the correlated attributes are calls of the same</span>
+<span class="sd">    function with different parameters. Therefore, all the features are</span>
+<span class="sd">    factorized by the values of the function arguments, and from each class</span>
+<span class="sd">    the representative with the lowest ``p_value`` is selected. Because the</span>
+<span class="sd">    table is sorted by ``p_value``, factorization is easy to implement</span>
+<span class="sd">    through a set.</span>
+
+<span class="sd">    :param relevance_table: pd.DataFrame: a table with the calculated features and their statistical significance</span>
+<span class="sd">    :return: List[str]: a list of names of relevant low-correlated features from ``relevance_table``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">seen</span><span class="p">,</span> <span class="n">res</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(),</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">size_set</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># to delete all parameter values in the feature name</span>
+    <span class="n">reg</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;[-0-9]|&quot;[^&quot;]*&quot;&#39;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">cur_iter</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">relevance_table</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">name</span><span class="p">,</span> <span class="n">relevant</span> <span class="o">=</span> <span class="n">relevance_table</span><span class="p">[[</span><span class="s1">&#39;feature&#39;</span><span class="p">,</span> <span class="s1">&#39;relevant&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">cur_iter</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">relevant</span> <span class="o">==</span> <span class="s1">&#39;False&#39;</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="n">normalized_name</span> <span class="o">=</span> <span class="n">reg</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">normalized_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+            <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">normalized_name</span><span class="p">)</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">size_set</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">res</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_fitted_models"><a class="viewcode-back" href="../text/selection_utils.html#selection_utils.get_fitted_models">[docs]</a><span class="k">def</span> <span class="nf">get_fitted_models</span><span class="p">(</span>
+        <span class="n">train_list</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the trained model for each ``train_list`` dataframe.</span>
+
+<span class="sd">    :param train_list: List[pd.DataFrame]: training data list</span>
+<span class="sd">    :param n_jobs: int: number of cores for parallel learning</span>
+<span class="sd">    :return: List[xgboost.sklearn.XGBRegressor]: list fitted ``XGBRegressor`` models</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">models</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">n_models</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_list</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_models</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;current model: </span><span class="si">{</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">n_models</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;**&#39;</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="mi">20</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_models</span><span class="p">)</span> <span class="o">+</span>
+              <span class="s1">&#39;..&#39;</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="mi">20</span> <span class="o">*</span> <span class="p">((</span><span class="n">n_models</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">n_models</span><span class="p">)))</span>
+
+        <span class="k">assert</span> <span class="s1">&#39;target&#39;</span> <span class="ow">in</span> <span class="n">train_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> \
+            <span class="sa">f</span><span class="s1">&#39;train[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">] must contain a target column!&#39;</span> \
+            <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">train.columns:</span><span class="se">\n</span><span class="si">{train[i].columns}</span><span class="s1">&#39;</span>
+
+        <span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span> <span class="o">=</span> <span class="n">train_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;target&#39;</span><span class="p">],</span>
+                                              <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">train_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;target&#39;</span><span class="p">]</span>
+
+        <span class="n">models</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">XGBRegressor</span><span class="p">(</span><span class="n">njobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">,</span>
+                         <span class="n">objective</span><span class="o">=</span><span class="s1">&#39;reg:squarederror&#39;</span><span class="p">,</span>
+                         <span class="n">random_state</span><span class="o">=</span><span class="n">i</span><span class="p">,</span>
+                         <span class="n">n_estimators</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">models</span></div>
+
+
+<div class="viewcode-block" id="get_importance"><a class="viewcode-back" href="../text/selection_utils.html#selection_utils.get_importance">[docs]</a><span class="k">def</span> <span class="nf">get_importance</span><span class="p">(</span>
+        <span class="n">models</span><span class="p">,</span>
+        <span class="n">train_list</span><span class="p">,</span>
+        <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Using the built-in feature importance estimation methods within ``XGBRegressor``</span>
+<span class="sd">    and the shap algorithm, it calculates the importance of the features on all</span>
+<span class="sd">    training data, normalizes and averages them.</span>
+
+<span class="sd">    :param models: List[xgboost.sklearn.XGBRegressor]: the list of trained models</span>
+<span class="sd">    :param train_list: List[pd.DataFrame]: the list of training data</span>
+<span class="sd">    :param mode: str:  importance calculating mode</span>
+<span class="sd">    :return: Dict[str, float]: dictionary, its keys are the features from the training data,</span>
+<span class="sd">     and the values are the calculated importance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">feature_names</span> <span class="o">=</span> <span class="n">train_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span>
+    <span class="n">importance_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="n">possible_modes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;gain&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="s1">&#39;cover&#39;</span><span class="p">,</span> <span class="s1">&#39;total_gain&#39;</span><span class="p">,</span> <span class="s1">&#39;total_cover&#39;</span><span class="p">,</span> <span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="s1">&#39;shap&#39;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">mode</span> <span class="ow">in</span> <span class="n">possible_modes</span><span class="p">,</span> \
+        <span class="sa">f</span><span class="s1">&#39;The mode must be one of </span><span class="si">{</span><span class="n">possible_modes</span><span class="si">}</span><span class="s1">, not </span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s1">!&#39;</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+        <span class="n">importance_type</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;gain&#39;</span><span class="p">,</span> <span class="s1">&#39;weight&#39;</span><span class="p">,</span> <span class="s1">&#39;cover&#39;</span><span class="p">,</span> <span class="s1">&#39;total_gain&#39;</span><span class="p">,</span> <span class="s1">&#39;total_cover&#39;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;shap&#39;</span><span class="p">:</span>
+        <span class="n">importance_type</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">importance_type</span> <span class="o">=</span> <span class="p">[</span><span class="n">mode</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">importance_type</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">models</span><span class="p">):</span>
+            <span class="n">importance_ti</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">get_booster</span><span class="p">()</span><span class="o">.</span><span class="n">get_score</span><span class="p">(</span><span class="n">importance_type</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">importance_ti</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">importance_ti</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="c1"># normalize importance (list item level)</span>
+                <span class="n">importance_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+=</span> <span class="n">importance_ti</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">/</span> <span class="n">s</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;shap&#39;</span> <span class="ow">or</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">models</span><span class="p">):</span>
+            <span class="n">train_x</span><span class="p">,</span> <span class="n">train_y</span> <span class="o">=</span> <span class="n">train_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;target&#39;</span><span class="p">],</span>
+                                                  <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">train_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;target&#39;</span><span class="p">]</span>
+
+            <span class="n">explainer</span> <span class="o">=</span> <span class="n">shap</span><span class="o">.</span><span class="n">TreeExplainer</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+            <span class="n">shap_values</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">shap_values</span><span class="p">(</span><span class="n">train_x</span><span class="p">)</span>
+            <span class="n">row_shap_importance</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">shap_values</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">row_shap_importance</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">shap_imp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">row_shap_importance</span><span class="p">):</span>
+                <span class="n">importance_dict</span><span class="p">[</span><span class="n">feature_names</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">shap_imp</span> <span class="o">/</span> <span class="n">s</span>
+
+    <span class="c1"># normalize importance (list level)</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">importance_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">shap_used</span> <span class="o">=</span> <span class="p">(</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;shap&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;all&#39;</span><span class="p">)</span>
+        <span class="n">importance_dict</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">/=</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_list</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">importance_type</span><span class="p">)</span> <span class="o">+</span> <span class="n">shap_used</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">importance_dict</span></div>
+
+
+<div class="viewcode-block" id="importance_select_features"><a class="viewcode-back" href="../text/selection_utils.html#selection_utils.importance_select_features">[docs]</a><span class="k">def</span> <span class="nf">importance_select_features</span><span class="p">(</span><span class="n">importance_dict</span><span class="p">,</span>
+                               <span class="n">portion</span><span class="o">=</span><span class="mf">0.8</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    According to the values of the importance of the attributes selects</span>
+<span class="sd">    the best of them, which contain the ``portion`` % of the importance</span>
+<span class="sd">    of all the features.</span>
+
+<span class="sd">    :param importance_dict: Dict[str, float]: a dictionary with the importance of each feature</span>
+<span class="sd">    :param portion: float: portion of the importance of all the features to be ensured</span>
+<span class="sd">    :return: List[Tuple[str, float]]: a minimum number of features, the overall importance of which &gt;= ``portion``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="mf">0.0</span> <span class="o">&lt;=</span> <span class="n">portion</span> <span class="o">&lt;=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;portion must be in [0;1], not </span><span class="si">{</span><span class="n">portion</span><span class="si">}</span><span class="s1">!&#39;</span>
+    <span class="n">sorted_features</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">importance_dict</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="mf">.0</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="n">portion</span><span class="p">:</span>
+        <span class="n">val</span> <span class="o">+=</span> <span class="n">sorted_features</span><span class="p">[</span><span class="n">size</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">size</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">sorted_features</span><span class="p">[:</span><span class="n">size</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_stats"><a class="viewcode-back" href="../text/selection_utils.html#selection_utils.get_stats">[docs]</a><span class="k">def</span> <span class="nf">get_stats</span><span class="p">(</span>
+        <span class="n">blocks</span><span class="p">,</span>
+        <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Using statistical criteria, calculates the significance of the features</span>
+<span class="sd">    for each block in the list. Then the obtained ``p_value`` s are averaged.</span>
+
+<span class="sd">    :param blocks: List[pd.DataFrame]: list of datas with ``target`` column and the same scheme</span>
+<span class="sd">    :param n_jobs: int: the number of cores that can be used in the calculation of stat values</span>
+<span class="sd">    :return: pd.DataFrame: df with calculated ``p_value`` for each of the attributes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;target&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">y</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">y</span><span class="p">,</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">relevance_table</span> <span class="o">=</span> <span class="n">calculate_relevance_table</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="n">n_jobs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">relevance_table</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Zinchenko Sergey.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

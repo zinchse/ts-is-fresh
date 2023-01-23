@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Introduction &mdash; TS IS FRESH 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Algorithm" href="algorithm.html" />
+    <link rel="prev" title="TS IS FRESH" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #e0b97e" >
+            <a href="../index.html" class="icon icon-home"> TS IS FRESH
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-problem-does-ts-is-fresh-solve">What problem does <strong>ts-is-fresh</strong> solve?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-does-it-solve-this-problem">How does it solve this problem?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#and-why-exactly-in-this-way">And why exactly in this way?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="algorithm.html">Algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toy_example.html">Toy Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source_code.html">Source code</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #e0b97e" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TS IS FRESH</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Introduction</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com//https://github.com/mordiggian174/hft_timeseries/blob/text/introduction.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
+<p>Hereinafter, by <strong>ts-is-fresh</strong> we will mean the idea of combining <code class="docutils literal notranslate"><span class="pre">tsfresh</span></code>, <code class="docutils literal notranslate"><span class="pre">block</span> <span class="pre">cross</span> <span class="pre">validation</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">feature</span> <span class="pre">importance</span> <span class="pre">selection</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">tsfresh</span></code> library <strong>ts-is-fresh</strong> combines the automatic search for significant features, which is very important
+for high-frequency trading. In a situation where a huge number of trades occur every second, and with the rapidly
+changing market, it is impossible to “hand-assess” the situation. It is necessary to build systems, which are able to
+select the important information and use it for increasing the accuracy of forecasts. Since <code class="docutils literal notranslate"><span class="pre">tsfresh</span></code> has a huge
+number of attributes and many of them take quite a long time to calculate, an additional selection of functions from
+<code class="docutils literal notranslate"><span class="pre">tsfresh</span></code> has been implemented to be used within the <strong>ts-is-fresh</strong> algorithm.</p>
+<p>Also, thanks to the block cross validation <strong>ts-is-fresh</strong> pays attention not only to the latest changes in the time
+series, but also to the market behavior over the whole time range. Broadly speaking, block cross validation evenly
+divides the whole time series into blocks, at each block different statistics (<code class="docutils literal notranslate"><span class="pre">p_values</span></code>, <code class="docutils literal notranslate"><span class="pre">feature_importance</span></code>,
+metrics, etc.) are counted, and then these indicators are averaged. Thanks to this technique, we do not focus our
+forecasting only on the last values of the time series. The block cross validation scheme takes into account the entire
+structure of the time series, does not change the sequence of events, and avoids data leaks.</p>
+<p>To learn more about how block cross-validation works, see <a class="reference internal" href="algorithm.html#algorithm"><span class="std std-ref">Algorithm</span></a>.</p>
+</section>
+<section id="what-problem-does-ts-is-fresh-solve">
+<h2>What problem does <strong>ts-is-fresh</strong> solve?<a class="headerlink" href="#what-problem-does-ts-is-fresh-solve" title="Permalink to this heading"></a></h2>
+<p><strong>ts-is-fresh</strong> is built to construct new features for predicting cryptocurrency prices on exchanges.
+Because of the high frequency of trading in this area, the built solution must work <strong>very quickly</strong> and <strong>not require</strong>
+<strong>manual debugging</strong>. For this reason it is necessary not only to build additional features, which will help increase
+the accuracy of the predictions, but also to <strong>limit their size</strong>! We can’t afford a long inference of models,
+nor a long learning process.</p>
+</section>
+<section id="how-does-it-solve-this-problem">
+<h2>How does it solve this problem?<a class="headerlink" href="#how-does-it-solve-this-problem" title="Permalink to this heading"></a></h2>
+<p>It was decided to generate a large number of statistical features, then train a gradient-boosting model and, using
+feature counting, leave only the most important features. From time to time it will be necessary to train the models
+on a large number of features to understand which subset of the features is now the most useful. But once we have
+selected the most useful features, we can train the models for a long time on only that set of features. Because we
+chose <code class="docutils literal notranslate"><span class="pre">XGBR</span></code> model, we have the ability to select  by feature importance values as well.</p>
+</section>
+<section id="and-why-exactly-in-this-way">
+<h2>And why exactly in this way?<a class="headerlink" href="#and-why-exactly-in-this-way" title="Permalink to this heading"></a></h2>
+<p>Let’s understand what the solutions are in general:</p>
+<p><strong>A) smart feature engineering</strong>: using domain knowledge, important features are created by hand, over which a simple
+(e.g., linear) model is then built</p>
+<ul class="simple">
+<li><p>easy to further train on-line</p></li>
+<li><p>it’s interpretable</p></li>
+<li><p>very fast model inference</p></li>
+<li><p>domain knowledge is needed</p></li>
+</ul>
+<p><strong>B) semi-automatic feature engineering</strong>: using some heuristics, different kinds of statistics (medians, quantiles,
+etc.) are computed, over which then treebased models are built</p>
+<ul class="simple">
+<li><p>less demanding of domain knowledge (because of the use of a more complex model, we can afford to build less expressive features)</p></li>
+<li><p>high expressive power</p></li>
+<li><p>fast model inference</p></li>
+<li><p>cannot be quickly retrained on-line</p></li>
+<li><p>it’s uninterpretable</p></li>
+</ul>
+<p><strong>C) statistical autoregressive approach</strong>: models like Arima, Prophet, etc.</p>
+<ul class="simple">
+<li><p>fast model inference</p></li>
+<li><p>correct selection of hyperparameters is necessary to build a good model</p></li>
+</ul>
+<p><strong>D) RNN-like approaches:</strong> recurrent neural networks like LSTM and others</p>
+<ul class="simple">
+<li><p>very heavy models (in terms of training and inference)</p></li>
+<li><p>can show very good results</p></li>
+</ul>
+<p>Due to my limited knowledge of the cryptocurrency market, I am removing the <strong>A)</strong> option. Since we have a lot of data,
+it will be quite hard to train high quality statistical models (to enumerate hyperparameters). Because of this approach
+<strong>C)</strong> is also rejected. Our goal is to predict <code class="docutils literal notranslate"><span class="pre">300ms</span></code> ahead, because of the fact that in approach <strong>D)</strong> this is
+comparable to inference models, it is also removed.</p>
+<p>This leaves approach <strong>B)</strong>, in which we need to automatically construct good features. Moreover, because of the
+limitation on inference and the lack of on-line retraining, our model must work fast enough (there must not be very
+many features), and also have a prediction horizon comparable to the learning time of the new model (we must have a
+good model at every moment, if the model is built longer than its predictions become obsolete, we will not be able
+to trade).</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="TS IS FRESH" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="algorithm.html" class="btn btn-neutral float-right" title="Algorithm" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Zinchenko Sergey.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

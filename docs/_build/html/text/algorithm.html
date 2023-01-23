@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Algorithm &mdash; TS IS FRESH 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Toy Example" href="toy_example.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #e0b97e" >
+            <a href="../index.html" class="icon icon-home"> TS IS FRESH
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Algorithm</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#preprocessing">Preprocessing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-basic-version-of-the-algorithm-working-with-a-single-time-series">The basic version of the algorithm - working with a single time series</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#advanced-version-of-the-algorithm-take-into-account-the-context">Advanced version of the algorithm - take into account the context</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="toy_example.html">Toy Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="source_code.html">Source code</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #e0b97e" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TS IS FRESH</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Algorithm</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com//https://github.com/mordiggian174/hft_timeseries/blob/text/algorithm.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="algorithm">
+<h1>Algorithm<a class="headerlink" href="#algorithm" title="Permalink to this heading"></a></h1>
+<section id="preprocessing">
+<h2>Preprocessing<a class="headerlink" href="#preprocessing" title="Permalink to this heading"></a></h2>
+<p>First of all, for ease of working with time series, we <strong>quantize</strong> its values over a certain interval within which we
+want to trust the predictions. In our case it is <code class="docutils literal notranslate"><span class="pre">300ms</span></code>. When quantizing, we use various aggregation functions that
+allow us to preserve information about the original time series.</p>
+<p>This part is solved with the function <a class="reference internal" href="preprocessing_utils.html#preprocessing_utils.quantize_table" title="preprocessing_utils.quantize_table"><code class="xref py py-func docutils literal notranslate"><span class="pre">preprocessing_utils.quantize_table()</span></code></a>.</p>
+</section>
+<section id="the-basic-version-of-the-algorithm-working-with-a-single-time-series">
+<h2>The basic version of the algorithm - working with a single time series<a class="headerlink" href="#the-basic-version-of-the-algorithm-working-with-a-single-time-series" title="Permalink to this heading"></a></h2>
+<a class="reference internal image-reference" href="../_images/first_stage_ts-is-fresh.svg"><img alt="../_images/first_stage_ts-is-fresh.svg" class="align-center" src="../_images/first_stage_ts-is-fresh.svg" width="90%" /></a>
+<p><strong>Statistical selection.</strong></p>
+<p>Since we want to generate statistical features using the <code class="docutils literal notranslate"><span class="pre">tsfresh</span></code> library, we need to take some windows for each
+point of the time series (some number of nearest points of the time series from the past). In each such window we can
+read a huge number of different functions (statistics of different criteria, asymmetry measures, quantiles, medians,
+and so on).</p>
+<p>After that, <strong>using statistical criteria</strong>, we will select among the constructed features only those that have great
+statistical significance in predicting the target value. This will allow us to narrow the dimensionality of the feature
+space for the first time (in practice, from about 800 to 100-200 features).</p>
+<p>This part is solved with the function <a class="reference internal" href="extraction_utils.html#extraction_utils.bcv_extract_features" title="extraction_utils.bcv_extract_features"><code class="xref py py-func docutils literal notranslate"><span class="pre">extraction_utils.bcv_extract_features()</span></code></a>.</p>
+<p>Since there are still not enough signs selected by statistical methods, it was decided to get the feature importance
+and select the features with the highest values with the help of <code class="docutils literal notranslate"><span class="pre">XGBR</span></code> models.</p>
+<p><strong>Selection of uncorrelated features.</strong></p>
+<p>Note that we cannot use feature importance right away - we may have <strong>highly correlated features</strong>. The importance will
+be evenly distributed between such features, and we can randomly discard them. Since <code class="docutils literal notranslate"><span class="pre">tsfresh</span></code> computes a large
+number of similar features with different hyperparameters, we are bound to have correlated features! To combat this,
+we factorize all the features into the functions from which they were derived. And within each class we leave only the
+representative with the highest <code class="docutils literal notranslate"><span class="pre">p_value</span></code>. After that we will count feature importance on the remaining
+representatives.</p>
+<p>Statistical significance is obtained using method <a class="reference internal" href="selection_utils.html#selection_utils.get_stats" title="selection_utils.get_stats"><code class="xref py py-func docutils literal notranslate"><span class="pre">selection_utils.get_stats()</span></code></a>, and the selection of the best
+uncorrelated features using <a class="reference internal" href="selection_utils.html#selection_utils.stats_select_features" title="selection_utils.stats_select_features"><code class="xref py py-func docutils literal notranslate"><span class="pre">selection_utils.stats_select_features()</span></code></a>.</p>
+<p><strong>Importance based selection.</strong></p>
+<p>On the selected uncorrelated features, we will train several <code class="docutils literal notranslate"><span class="pre">XGBR</span></code> models. Then for each of them we will count 6
+types of feature importance (including <code class="docutils literal notranslate"><span class="pre">shap</span></code> values). By normalizing and averaging the obtained values, we can rank
+the features according to their importance. By selecting features whose total importance reaches <code class="docutils literal notranslate"><span class="pre">80%</span></code>, we get
+the <strong>final set</strong>!</p>
+<p>This part is solved with the functions <a class="reference internal" href="selection_utils.html#selection_utils.get_importance" title="selection_utils.get_importance"><code class="xref py py-func docutils literal notranslate"><span class="pre">selection_utils.get_importance()</span></code></a>,
+<a class="reference internal" href="selection_utils.html#selection_utils.importance_select_features" title="selection_utils.importance_select_features"><code class="xref py py-func docutils literal notranslate"><span class="pre">selection_utils.importance_select_features()</span></code></a>.</p>
+</section>
+<section id="advanced-version-of-the-algorithm-take-into-account-the-context">
+<h2>Advanced version of the algorithm - take into account the context<a class="headerlink" href="#advanced-version-of-the-algorithm-take-into-account-the-context" title="Permalink to this heading"></a></h2>
+<a class="reference internal image-reference" href="../_images/second_stage_ts-is-fresh.svg"><img alt="../_images/second_stage_ts-is-fresh.svg" class="align-center" src="../_images/second_stage_ts-is-fresh.svg" width="90%" /></a>
+<p>In practice, a large number of currencies are always traded, we can take this information into account!
+Of course, we will not be able to take into account all currencies - the growth in the number of parameters is too
+large. So it was decided to select 10 currencies that have the <strong>highest correlation</strong> with the target currency.
+In our case, correlation is the Euclidean distance between vectors of % price changes.</p>
+<p>After that, for each of the currencies, we calculated the features that were selected for the target currency in the
+previous step. Combined the information obtained into one large table. And again started the cycle of work with one
+time series. at the output, we get features selected statistically and with the help of importance, calculated both for
+the target currency and for others!</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="toy_example.html" class="btn btn-neutral float-right" title="Toy Example" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Zinchenko Sergey.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

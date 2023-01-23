@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>preprocessing_utils &mdash; TS IS FRESH 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: #e0b97e" >
+            <a href="../index.html" class="icon icon-home"> TS IS FRESH
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../text/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../text/algorithm.html">Algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../text/toy_example.html">Toy Example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../text/source_code.html">Source code</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: #e0b97e" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">TS IS FRESH</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">preprocessing_utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for preprocessing_utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numba</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+
+
+<div class="viewcode-block" id="triple_dot"><a class="viewcode-back" href="../text/preprocessing_utils.html#preprocessing_utils.triple_dot">[docs]</a><span class="nd">@numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">forceobj</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">triple_dot</span><span class="p">(</span><span class="n">c1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">c2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">c3</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; accelerated intermediate calculations in the table separating process &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">c1</span> <span class="o">*</span> <span class="n">c2</span> <span class="o">*</span> <span class="n">c3</span></div>
+
+
+<div class="viewcode-block" id="separate_and_save"><a class="viewcode-back" href="../text/preprocessing_utils.html#preprocessing_utils.separate_and_save">[docs]</a><span class="k">def</span> <span class="nf">separate_and_save</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">sep_col</span><span class="o">=</span><span class="s1">&#39;symbol&#39;</span><span class="p">,</span>
+                      <span class="n">path_to_save</span><span class="o">=</span><span class="s1">&#39;data/&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Splits the table into several small tables according to the value</span>
+<span class="sd">    of the ``sep_col`` column.</span>
+
+<span class="sd">    :param df: pd.DataFrame: a large table, which must be divided into several smaller ones</span>
+<span class="sd">    :param names: List[str]: the values of the ``sep_col`` column for which the tables</span>
+<span class="sd">     are to be saved</span>
+<span class="sd">    :param sep_col: str: the name of the column by which we want to split the table</span>
+<span class="sd">    :param path_to_save: str: the address where we want to save the tables</span>
+<span class="sd">    :return: nothing is returned, separated tables by ``sep_col`` column values</span>
+<span class="sd">     from the ``names`` list are saved to the address ``path_to_save`` in csv format</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df_grouped</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="n">sep_col</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">df_grouped</span><span class="o">.</span><span class="n">get_group</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="c1"># accelerated intermediate calculations</span>
+        <span class="n">t</span><span class="p">[</span><span class="s1">&#39;money_buy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">triple_dot</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+                                    <span class="n">t</span><span class="p">[</span><span class="s1">&#39;quantity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+                                    <span class="n">t</span><span class="p">[</span><span class="s1">&#39;is_buy&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+        <span class="n">t</span><span class="p">[</span><span class="s1">&#39;money_sell&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">triple_dot</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="s1">&#39;price&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+                                     <span class="n">t</span><span class="p">[</span><span class="s1">&#39;quantity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span>
+                                     <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;is_buy&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+        <span class="n">t</span><span class="p">[</span><span class="s1">&#39;is_not_buy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">t</span><span class="p">[</span><span class="s1">&#39;is_buy&#39;</span><span class="p">]</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path_to_save</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">.csv&#39;</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="load_tables"><a class="viewcode-back" href="../text/preprocessing_utils.html#preprocessing_utils.load_tables">[docs]</a><span class="k">def</span> <span class="nf">load_tables</span><span class="p">(</span><span class="n">names</span><span class="p">,</span>
+                <span class="n">path_from</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads tables from ``path_from`` address with names from the list ``names`` into the dictionary.</span>
+
+<span class="sd">    :param names: List[str]: table names</span>
+<span class="sd">    :param path_from: str: path to the tables</span>
+<span class="sd">    :return: Dict[str, pd.DataFrame]: dictionary, its keys are ``names`` list items, values are loaded</span>
+<span class="sd">     tables from ``path_from/name.csv``</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+        <span class="n">df_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path_from</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">.csv&#39;</span><span class="p">,</span>
+                                    <span class="n">index_col</span><span class="o">=</span><span class="s1">&#39;event_time&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s1">&#39;Unnamed: 0&#39;</span> <span class="ow">in</span> <span class="n">df_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">df_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;Unnamed: 0&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df_dict</span></div>
+
+
+<div class="viewcode-block" id="save_tables"><a class="viewcode-back" href="../text/preprocessing_utils.html#preprocessing_utils.save_tables">[docs]</a><span class="k">def</span> <span class="nf">save_tables</span><span class="p">(</span><span class="n">df_dict</span><span class="p">,</span>
+                <span class="n">names</span><span class="p">,</span>
+                <span class="n">path_to</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Saves tables from ``df_dict`` dictionary with keys from `names`` list.</span>
+
+<span class="sd">    :param df_dict: Dict[str, pd.DataFrame]: dictionary with dataframes</span>
+<span class="sd">    :param names: List[str]: a subset of the ``df_dict`` keys for which the tables are to be saved</span>
+<span class="sd">    :param path_to: str: the address where we want to save the tables</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+        <span class="n">df_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path_to</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">.csv&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="quantize_table"><a class="viewcode-back" href="../text/preprocessing_utils.html#preprocessing_utils.quantize_table">[docs]</a><span class="k">def</span> <span class="nf">quantize_table</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;300ms&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a dataframe quantized by ``freq``-sized windows. Inside each window it calculates</span>
+<span class="sd">    some statistics (mean, median, standard deviation, and others).</span>
+
+<span class="sd">    :param df: pd.DataFrame: unprocessed dataframe</span>
+<span class="sd">    :param freq: str: quantization window width</span>
+<span class="sd">    :return: pd.DataFrame: dataframe quantized by ``freq``-sized windows</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s1">&#39;event_time&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df</span><span class="p">[</span><span class="s1">&#39;event_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;event_time&#39;</span><span class="p">])</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;event_time&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Grouper</span><span class="p">(</span><span class="n">freq</span><span class="o">=</span><span class="n">freq</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s1">&#39;start_day&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span>
+        <span class="n">price_mean</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;price&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">),</span>
+        <span class="n">price_median</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;price&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">),</span>
+        <span class="n">price_std</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;price&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">),</span>
+        <span class="n">buy_price_sum</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;money_buy&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">),</span>
+        <span class="n">sell_price_sum</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;money_sell&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">),</span>
+        <span class="n">nonzero_count</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;price&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">),</span>
+        <span class="n">buy_count</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;is_buy&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">),</span>
+        <span class="n">sell_count</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;is_not_buy&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">),</span>
+    <span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Zinchenko Sergey.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
