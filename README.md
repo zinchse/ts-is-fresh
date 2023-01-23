@@ -1,3 +1,6 @@
+<img width="1139" alt="image" src="https://user-images.githubusercontent.com/58306690/214125963-d325c142-ab10-4cbc-a60a-862ca911343a.png">
+
+
 # TS IS FRESH
 
 It is Time Series Importance based Selection and FeatuRe Extraction on basis of Scalable Hypothesis tests. 
