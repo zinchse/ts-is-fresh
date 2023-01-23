@@ -2,6 +2,5 @@ numpy
 pandas
 tsfresh
 numba
-re
 shap
 xgboost
