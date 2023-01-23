@@ -33,7 +33,6 @@ Contents
 .. toctree::
    :maxdepth: 2
 
-   text/modules
    text/introduction
    text/algorithm
    text/toy_example
