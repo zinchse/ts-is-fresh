@@ -77,7 +77,13 @@ shap==0.41.0
 tsfresh==0.20.0
 xgboost==1.5.2
 ```
-
+**data and runs**
 The experiments were run on real data from the stock exchange in one day. The sizes are on the order of several hundred million records.
-You can download the dataset from this [[link]](https://drive.google.com/file/d/10cPodvJYP7MEM_6XfAMF99YiDlDxv8wL/view). Also you can reproduce the results using `\notebooks` (during the execution, the date folder
+You can download the dataset from this [[link]](https://drive.google.com/file/d/10cPodvJYP7MEM_6XfAMF99YiDlDxv8wL/view) (and put it into `/data`). Also you can reproduce the results using `/notebooks` (during the execution, the date folder
 will be filled in as needed).
+
+**file structure**
+```bash
+cd $PATH_TO_PROJECT/docs;
+mkdir raw; mkdir separated; mkdir quantized;
+```
