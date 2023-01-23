@@ -6,7 +6,9 @@
 It is Time Series Importance based Selection and FeatuRe Extraction on basis of Scalable Hypothesis tests. 
 
 Algorithm implements the 
-idea of combining the selection of features by their importance and the generation of features using the [[tsfresh]](https://github.com/blue-yonder/tsfresh) library :)
+idea of combining the selection of features by their importance and the generation of features using the [**[tsfresh]**](https://github.com/blue-yonder/tsfresh) library :)
+
+Detailed documentation can be found here [**[DOCS]**](https://ts-is-fresh.readthedocs.io/en/latest/index.html#)
 
 
 ## Overview 
