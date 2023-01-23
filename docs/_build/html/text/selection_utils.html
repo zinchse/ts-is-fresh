@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>selection_utils module &mdash; TS IS FRESH 0.0.1 documentation</title>
@@ -20,7 +20,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="preprocessing_utils module" href="preprocessing_utils.html" /> 
+    <link rel="prev" title="MODULES" href="modules.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -38,23 +38,8 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="algorithm.html">Algorithm</a></li>
-<li class="toctree-l1"><a class="reference internal" href="toy_example.html">Toy Example</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="source_code.html">Source code</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="extraction_utils.html">extraction_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="preprocessing_utils.html">preprocessing_utils module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">selection_utils module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#selection_utils.get_fitted_models"><code class="docutils literal notranslate"><span class="pre">get_fitted_models()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#selection_utils.get_importance"><code class="docutils literal notranslate"><span class="pre">get_importance()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#selection_utils.get_stats"><code class="docutils literal notranslate"><span class="pre">get_stats()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#selection_utils.importance_select_features"><code class="docutils literal notranslate"><span class="pre">importance_select_features()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#selection_utils.stats_select_features"><code class="docutils literal notranslate"><span class="pre">stats_select_features()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">MODULES</a></li>
 </ul>
 
         </div>
@@ -71,7 +56,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="source_code.html">Source code</a></li>
+          <li class="breadcrumb-item"><a href="modules.html">MODULES</a></li>
       <li class="breadcrumb-item active">selection_utils module</li>
       <li class="wy-breadcrumbs-aside">
               <a href="https://github.com//https://github.com/mordiggian174/hft_timeseries/blob/text/selection_utils.rst" class="fa fa-github"> Edit on GitHub</a>
@@ -89,13 +74,13 @@
 <span class="sig-prename descclassname"><span class="pre">selection_utils.</span></span><span class="sig-name descname"><span class="pre">get_fitted_models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/selection_utils.html#get_fitted_models"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#selection_utils.get_fitted_models" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the trained model for each <code class="docutils literal notranslate"><span class="pre">train_list</span></code> dataframe.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>train_list</strong> – List[pd.DataFrame]: training data list</p></li>
 <li><p><strong>n_jobs</strong> – int: number of cores for parallel learning</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>List[xgboost.sklearn.XGBRegressor]: list fitted <code class="docutils literal notranslate"><span class="pre">XGBRegressor</span></code> models</p>
 </dd>
 </dl>
@@ -108,14 +93,14 @@
 and the shap algorithm, it calculates the importance of the features on all
 training data, normalizes and averages them.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>models</strong> – List[xgboost.sklearn.XGBRegressor]: the list of trained models</p></li>
 <li><p><strong>train_list</strong> – List[pd.DataFrame]: the list of training data</p></li>
 <li><p><strong>mode</strong> – str:  importance calculating mode</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Dict[str, float]: dictionary, its keys are the features from the training data,
 and the values are the calculated importance</p>
 </dd>
@@ -128,13 +113,13 @@ and the values are the calculated importance</p>
 <dd><p>Using statistical criteria, calculates the significance of the features
 for each block in the list. Then the obtained <code class="docutils literal notranslate"><span class="pre">p_value</span></code> s are averaged.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>blocks</strong> – List[pd.DataFrame]: list of datas with <code class="docutils literal notranslate"><span class="pre">target</span></code> column and the same scheme</p></li>
 <li><p><strong>n_jobs</strong> – int: the number of cores that can be used in the calculation of stat values</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>pd.DataFrame: df with calculated <code class="docutils literal notranslate"><span class="pre">p_value</span></code> for each of the attributes</p>
 </dd>
 </dl>
@@ -147,13 +132,13 @@ for each block in the list. Then the obtained <code class="docutils literal notr
 the best of them, which contain the <code class="docutils literal notranslate"><span class="pre">portion</span></code> % of the importance
 of all the features.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>importance_dict</strong> – Dict[str, float]: a dictionary with the importance of each feature</p></li>
 <li><p><strong>portion</strong> – float: portion of the importance of all the features to be ensured</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>List[Tuple[str, float]]: a minimum number of features, the overall importance of which &gt;= <code class="docutils literal notranslate"><span class="pre">portion</span></code></p>
 </dd>
 </dl>
@@ -171,10 +156,10 @@ the representative with the lowest <code class="docutils literal notranslate"><s
 table is sorted by <code class="docutils literal notranslate"><span class="pre">p_value</span></code>, factorization is easy to implement
 through a set.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>relevance_table</strong> – pd.DataFrame: a table with the calculated features and their statistical significance</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>List[str]: a list of names of relevant low-correlated features from <code class="docutils literal notranslate"><span class="pre">relevance_table</span></code>.</p>
 </dd>
 </dl>
@@ -186,7 +171,7 @@ through a set.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="preprocessing_utils.html" class="btn btn-neutral float-left" title="preprocessing_utils module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="modules.html" class="btn btn-neutral float-left" title="MODULES" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

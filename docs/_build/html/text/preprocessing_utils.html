@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>preprocessing_utils module &mdash; TS IS FRESH 0.0.1 documentation</title>
@@ -19,9 +19,7 @@
         <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="selection_utils module" href="selection_utils.html" />
-    <link rel="prev" title="extraction_utils module" href="extraction_utils.html" /> 
+    <link rel="search" title="Search" href="../search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -39,23 +37,8 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="algorithm.html">Algorithm</a></li>
-<li class="toctree-l1"><a class="reference internal" href="toy_example.html">Toy Example</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="source_code.html">Source code</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="extraction_utils.html">extraction_utils module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">preprocessing_utils module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#preprocessing_utils.load_tables"><code class="docutils literal notranslate"><span class="pre">load_tables()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#preprocessing_utils.quantize_table"><code class="docutils literal notranslate"><span class="pre">quantize_table()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#preprocessing_utils.save_tables"><code class="docutils literal notranslate"><span class="pre">save_tables()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#preprocessing_utils.separate_and_save"><code class="docutils literal notranslate"><span class="pre">separate_and_save()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#preprocessing_utils.triple_dot"><code class="docutils literal notranslate"><span class="pre">triple_dot()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="selection_utils.html">selection_utils module</a></li>
-</ul>
-</li>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">MODULES</a></li>
 </ul>
 
         </div>
@@ -72,7 +55,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="source_code.html">Source code</a></li>
       <li class="breadcrumb-item active">preprocessing_utils module</li>
       <li class="wy-breadcrumbs-aside">
               <a href="https://github.com//https://github.com/mordiggian174/hft_timeseries/blob/text/preprocessing_utils.rst" class="fa fa-github"> Edit on GitHub</a>
@@ -90,13 +72,13 @@
 <span class="sig-prename descclassname"><span class="pre">preprocessing_utils.</span></span><span class="sig-name descname"><span class="pre">load_tables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_from</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/preprocessing_utils.html#load_tables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#preprocessing_utils.load_tables" title="Permalink to this definition"></a></dt>
 <dd><p>Reads tables from <code class="docutils literal notranslate"><span class="pre">path_from</span></code> address with names from the list <code class="docutils literal notranslate"><span class="pre">names</span></code> into the dictionary.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>names</strong> – List[str]: table names</p></li>
 <li><p><strong>path_from</strong> – str: path to the tables</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Dict[str, pd.DataFrame]: dictionary, its keys are <code class="docutils literal notranslate"><span class="pre">names</span></code> list items, values are loaded
 tables from <code class="docutils literal notranslate"><span class="pre">path_from/name.csv</span></code></p>
 </dd>
@@ -109,13 +91,13 @@ tables from <code class="docutils literal notranslate"><span class="pre">path_fr
 <dd><p>Returns a dataframe quantized by <code class="docutils literal notranslate"><span class="pre">freq</span></code>-sized windows. Inside each window it calculates
 some statistics (mean, median, standard deviation, and others).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>df</strong> – pd.DataFrame: unprocessed dataframe</p></li>
 <li><p><strong>freq</strong> – str: quantization window width</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>pd.DataFrame: dataframe quantized by <code class="docutils literal notranslate"><span class="pre">freq</span></code>-sized windows</p>
 </dd>
 </dl>
@@ -126,7 +108,7 @@ some statistics (mean, median, standard deviation, and others).</p>
 <span class="sig-prename descclassname"><span class="pre">preprocessing_utils.</span></span><span class="sig-name descname"><span class="pre">save_tables</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_to</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/preprocessing_utils.html#save_tables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#preprocessing_utils.save_tables" title="Permalink to this definition"></a></dt>
 <dd><p>Saves tables from <code class="docutils literal notranslate"><span class="pre">df_dict</span></code> dictionary with keys from <cite>names`</cite> list.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>df_dict</strong> – Dict[str, pd.DataFrame]: dictionary with dataframes</p></li>
 <li><p><strong>names</strong> – List[str]: a subset of the <code class="docutils literal notranslate"><span class="pre">df_dict</span></code> keys for which the tables are to be saved</p></li>
@@ -142,7 +124,7 @@ some statistics (mean, median, standard deviation, and others).</p>
 <dd><p>Splits the table into several small tables according to the value
 of the <code class="docutils literal notranslate"><span class="pre">sep_col</span></code> column.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>df</strong> – pd.DataFrame: a large table, which must be divided into several smaller ones</p></li>
 <li><p><strong>names</strong> – List[str]: the values of the <code class="docutils literal notranslate"><span class="pre">sep_col</span></code> column for which the tables
@@ -151,7 +133,7 @@ are to be saved</p></li>
 <li><p><strong>path_to_save</strong> – str: the address where we want to save the tables</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>nothing is returned, separated tables by <code class="docutils literal notranslate"><span class="pre">sep_col</span></code> column values
 from the <code class="docutils literal notranslate"><span class="pre">names</span></code> list are saved to the address <code class="docutils literal notranslate"><span class="pre">path_to_save</span></code> in csv format</p>
 </dd>
@@ -169,10 +151,7 @@ from the <code class="docutils literal notranslate"><span class="pre">names</spa
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="extraction_utils.html" class="btn btn-neutral float-left" title="extraction_utils module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="selection_utils.html" class="btn btn-neutral float-right" title="selection_utils module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

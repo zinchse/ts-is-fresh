@@ -33,11 +33,7 @@ Contents
 .. toctree::
    :maxdepth: 4
 
-   text/introduction
-   text/algorithm
-   text/toy_example
-   text/source_code
-
+   text/modules
 
 Indices and tables
 ==================
