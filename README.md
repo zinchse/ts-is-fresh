@@ -3,7 +3,7 @@
 
 # TS IS FRESH
 
-It is Time Series Importance based Selection and FeatuRe Extraction on basis of Scalable Hypothesis tests. 
+It is **T**ime **S**eries **I**mportance based **S**election and **F**eatu**R**e **E**xtraction on basis of **S**calable **H**ypothesis tests. 
 
 Algorithm implements the 
 idea of combining the selection of features by their importance and the generation of features using the [**[tsfresh]**](https://github.com/blue-yonder/tsfresh) library :)
@@ -87,7 +87,7 @@ will be filled in as needed).
 
 **file structure.**
 
-```bash
+```
 cd $PATH_TO_PROJECT/docs;
 mkdir raw; mkdir separated; mkdir quantized;
 ```
