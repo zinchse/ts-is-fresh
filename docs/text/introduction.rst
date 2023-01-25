@@ -8,7 +8,7 @@ Overview
 Hereinafter, by **ts-is-fresh** we will mean the idea of combining ``tsfresh``, ``block cross validation``, and
 ``feature importance selection``.
 
-The ``ts-is-fresh`` library combines the automatic search for significant features, which is very important
+The ``ts-is-fresh`` combines the automatic search for significant features, which is very important
 for high-frequency trading. In a situation where a huge number of trades occur every second, and with the rapidly
 changing market, it is impossible to "hand-assess" the situation. It is necessary to build systems, which are able to
 select the important information and use it for increasing the accuracy of forecasts. Since ``tsfresh`` can calculate
