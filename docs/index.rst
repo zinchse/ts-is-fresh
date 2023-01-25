@@ -18,14 +18,15 @@ Here is an idea that combines:
 
 - analysis of the similarity of price behavior for different currencies
 
-- automatic generation of statistical indicators by a certain time window (from ``tsfresh``)
+- automatic generation of statistical statistics by time windows (from ``tsfresh``)
 
 - feature selection through statistical hypothesis tests (from ``tsfresh``)
 
-- decreasing the dimensionality of the feature space through the search for weakly correlated features
+- reducing the dimension of the feature space due to the clustering of highly correlated features
 
 - counting feature importance values (including ``shap`` values) through block cross validation
 
+- feature selection based on their importance values
 
 Contents
 ========

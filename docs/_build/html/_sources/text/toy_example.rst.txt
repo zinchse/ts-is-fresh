@@ -22,9 +22,10 @@ Block cross-validation works as follows: we divide the whole time series into eq
    :width: 70 %
    :align: center
 
-After that we need to generate traits using the ``tsfresh`` library. To get the value of a trait, we need to apply some
-transformation to the whole time series. To do this, we will take the last few values of the time series (window) at
-each time point, and apply the transformations to them. In this way we will get a large number of new features.
+After that we need to generate statistics using the ``tsfresh`` library. To get the statistic, we need to
+apply some transformation to the whole time series. To do this, we will take the last few values of the time series
+(window) at each time point, and apply the transformations to them. In this way we will get a large number of
+new features.
 
 .. image:: ../pictures/toy_ts_windows.png
    :width: 70 %
@@ -37,7 +38,7 @@ This is done using the function :func:`extraction_utils.bcv_extract_features`.
 Stats Selection
 ---------------
 
-Then we need to understand which of the generated features are really important. To do this, we will combine the
+Then we need to understand which of the generated statistics are really important. To do this, we will combine the
 information for all blocks into one table, and measure its statistical significance for each feature. After that,
 we leave only uncorrelated relevant features with the highest ``p_value``.
 

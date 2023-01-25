@@ -29,8 +29,7 @@ space for the first time (in practice, from about 800 to 100-200 features).
 
 This part is solved with the function :func:`extraction_utils.bcv_extract_features`.
 
-
-Since there are still not enough signs selected by statistical methods, it was decided to get the feature importance
+Since there are quite a lot of features selected by statistical methods, it was decided to get the feature importance
 and select the features with the highest values with the help of ``XGBR`` models.
 
 
@@ -71,5 +70,5 @@ In our case, correlation is the Euclidean distance between vectors of % price ch
 
 After that, for each of the currencies, we calculated the features that were selected for the target currency in the
 previous step. Combined the information obtained into one large table. And again started the cycle of work with one
-time series. at the output, we get features selected statistically and with the help of importance, calculated both for
-the target currency and for others!
+time series. At the output, we get features selected statistically and with the help of importance values, calculated
+both for the target currency and for others!

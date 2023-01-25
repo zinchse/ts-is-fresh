@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Toy Example &mdash; TS IS FRESH 0.0.1 documentation</title>
@@ -89,15 +89,16 @@
 <p>Block cross-validation works as follows: we divide the whole time series into equal blocks counting some attributes
 (target and lag) before doing so. In the case of two blocks we will get the following picture:</p>
 <a class="reference internal image-reference" href="../_images/toy_ts_blocks.png"><img alt="../_images/toy_ts_blocks.png" class="align-center" src="../_images/toy_ts_blocks.png" style="width: 70%;" /></a>
-<p>After that we need to generate traits using the <code class="docutils literal notranslate"><span class="pre">tsfresh</span></code> library. To get the value of a trait, we need to apply some
-transformation to the whole time series. To do this, we will take the last few values of the time series (window) at
-each time point, and apply the transformations to them. In this way we will get a large number of new features.</p>
+<p>After that we need to generate statistics using the <code class="docutils literal notranslate"><span class="pre">tsfresh</span></code> library. To get the statistic, we need to
+apply some transformation to the whole time series. To do this, we will take the last few values of the time series
+(window) at each time point, and apply the transformations to them. In this way we will get a large number of
+new features.</p>
 <a class="reference internal image-reference" href="../_images/toy_ts_windows.png"><img alt="../_images/toy_ts_windows.png" class="align-center" src="../_images/toy_ts_windows.png" style="width: 70%;" /></a>
 <p>This is done using the function <a class="reference internal" href="extraction_utils.html#extraction_utils.bcv_extract_features" title="extraction_utils.bcv_extract_features"><code class="xref py py-func docutils literal notranslate"><span class="pre">extraction_utils.bcv_extract_features()</span></code></a>.</p>
 </section>
 <section id="stats-selection">
 <h2>Stats Selection<a class="headerlink" href="#stats-selection" title="Permalink to this heading"></a></h2>
-<p>Then we need to understand which of the generated features are really important. To do this, we will combine the
+<p>Then we need to understand which of the generated statistics are really important. To do this, we will combine the
 information for all blocks into one table, and measure its statistical significance for each feature. After that,
 we leave only uncorrelated relevant features with the highest <code class="docutils literal notranslate"><span class="pre">p_value</span></code>.</p>
 <p>Statistical significance is obtained using method <a class="reference internal" href="selection_utils.html#selection_utils.get_stats" title="selection_utils.get_stats"><code class="xref py py-func docutils literal notranslate"><span class="pre">selection_utils.get_stats()</span></code></a>, and the selection of the best

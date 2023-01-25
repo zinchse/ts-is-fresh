@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Introduction &mdash; TS IS FRESH 0.0.1 documentation</title>
@@ -82,18 +82,18 @@
 <h2>Overview<a class="headerlink" href="#overview" title="Permalink to this heading"></a></h2>
 <p>Hereinafter, by <strong>ts-is-fresh</strong> we will mean the idea of combining <code class="docutils literal notranslate"><span class="pre">tsfresh</span></code>, <code class="docutils literal notranslate"><span class="pre">block</span> <span class="pre">cross</span> <span class="pre">validation</span></code>, and
 <code class="docutils literal notranslate"><span class="pre">feature</span> <span class="pre">importance</span> <span class="pre">selection</span></code>.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">tsfresh</span></code> library <strong>ts-is-fresh</strong> combines the automatic search for significant features, which is very important
+<p>The <code class="docutils literal notranslate"><span class="pre">ts-is-fresh</span></code> library combines the automatic search for significant features, which is very important
 for high-frequency trading. In a situation where a huge number of trades occur every second, and with the rapidly
 changing market, it is impossible to “hand-assess” the situation. It is necessary to build systems, which are able to
-select the important information and use it for increasing the accuracy of forecasts. Since <code class="docutils literal notranslate"><span class="pre">tsfresh</span></code> has a huge
-number of attributes and many of them take quite a long time to calculate, an additional selection of functions from
-<code class="docutils literal notranslate"><span class="pre">tsfresh</span></code> has been implemented to be used within the <strong>ts-is-fresh</strong> algorithm.</p>
-<p>Also, thanks to the block cross validation <strong>ts-is-fresh</strong> pays attention not only to the latest changes in the time
-series, but also to the market behavior over the whole time range. Broadly speaking, block cross validation evenly
+select the important information and use it for increasing the accuracy of forecasts. Since <code class="docutils literal notranslate"><span class="pre">tsfresh</span></code> can calculate
+a huge number of features and many of them take quite a long time to calculate, an additional selection of features
+from <code class="docutils literal notranslate"><span class="pre">tsfresh</span></code> has been implemented to be used within the <strong>ts-is-fresh</strong> algorithm.</p>
+<p>Also, thanks to the <code class="docutils literal notranslate"><span class="pre">block</span> <span class="pre">cross</span> <span class="pre">validation</span></code> <strong>ts-is-fresh</strong> pays attention not only to the latest changes in the time
+series, but also to the market behavior over the whole time range. Broadly speaking, <code class="docutils literal notranslate"><span class="pre">block</span> <span class="pre">cross</span> <span class="pre">validation</span></code> evenly
 divides the whole time series into blocks, at each block different statistics (<code class="docutils literal notranslate"><span class="pre">p_values</span></code>, <code class="docutils literal notranslate"><span class="pre">feature_importance</span></code>,
 metrics, etc.) are counted, and then these indicators are averaged. Thanks to this technique, we do not focus our
-forecasting only on the last values of the time series. The block cross validation scheme takes into account the entire
-structure of the time series, does not change the sequence of events, and avoids data leaks.</p>
+forecasting only on the last values of the time series. The <code class="docutils literal notranslate"><span class="pre">block</span> <span class="pre">cross</span> <span class="pre">validation</span></code> scheme takes into account the
+entire structure of the time series, does not change the sequence of events, and avoids data leaks.</p>
 <p>To learn more about how block cross-validation works, see <a class="reference internal" href="algorithm.html#algorithm"><span class="std std-ref">Algorithm</span></a>.</p>
 </section>
 <section id="what-problem-does-ts-is-fresh-solve">
@@ -106,11 +106,11 @@ nor a long learning process.</p>
 </section>
 <section id="how-does-it-solve-this-problem">
 <h2>How does it solve this problem?<a class="headerlink" href="#how-does-it-solve-this-problem" title="Permalink to this heading"></a></h2>
-<p>It was decided to generate a large number of statistical features, then train a gradient-boosting model and, using
-feature counting, leave only the most important features. From time to time it will be necessary to train the models
-on a large number of features to understand which subset of the features is now the most useful. But once we have
-selected the most useful features, we can train the models for a long time on only that set of features. Because we
-chose <code class="docutils literal notranslate"><span class="pre">XGBR</span></code> model, we have the ability to select  by feature importance values as well.</p>
+<p>It was decided to generate a large number of statistical features, then train a gradient-boosting model and leave only
+the most important features. From time to time it will be necessary to train the models on a large number of features
+to understand which subset of the features is now the most useful. But once we have selected the most useful features,
+we can train the models for a long time on only that set of features. Because we chose <code class="docutils literal notranslate"><span class="pre">XGBR</span></code> model, we have the
+ability to select features by their importance values as well.</p>
 </section>
 <section id="and-why-exactly-in-this-way">
 <h2>And why exactly in this way?<a class="headerlink" href="#and-why-exactly-in-this-way" title="Permalink to this heading"></a></h2>
@@ -143,9 +143,9 @@ etc.) are computed, over which then treebased models are built</p>
 <li><p>can show very good results</p></li>
 </ul>
 <p>Due to my limited knowledge of the cryptocurrency market, I am removing the <strong>A)</strong> option. Since we have a lot of data,
-it will be quite hard to train high quality statistical models (to enumerate hyperparameters). Because of this approach
-<strong>C)</strong> is also rejected. Our goal is to predict <code class="docutils literal notranslate"><span class="pre">300ms</span></code> ahead, because of the fact that in approach <strong>D)</strong> this is
-comparable to inference models, it is also removed.</p>
+it will be quite hard to train high quality statistical models (we need to enumerate hyperparameters). Because of this
+approach <strong>C)</strong> is also rejected. Our goal is to predict <code class="docutils literal notranslate"><span class="pre">300ms</span></code> ahead, because of the fact that in approach <strong>D)</strong>
+this is comparable to inference models, it is also removed.</p>
 <p>This leaves approach <strong>B)</strong>, in which we need to automatically construct good features. Moreover, because of the
 limitation on inference and the lack of on-line retraining, our model must work fast enough (there must not be very
 many features), and also have a prediction horizon comparable to the learning time of the new model (we must have a

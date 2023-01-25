@@ -76,13 +76,13 @@
 
 <div class="viewcode-block" id="triple_dot"><a class="viewcode-back" href="../text/preprocessing_utils.html#preprocessing_utils.triple_dot">[docs]</a><span class="nd">@numba</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">forceobj</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">def</span> <span class="nf">triple_dot</span><span class="p">(</span><span class="n">c1</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">c2</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">c3</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; accelerated intermediate calculations in the table separating process &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot; accelerated intermediate calculations in the table separating process &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">c1</span> <span class="o">*</span> <span class="n">c2</span> <span class="o">*</span> <span class="n">c3</span></div>
 
 
 <div class="viewcode-block" id="separate_and_save"><a class="viewcode-back" href="../text/preprocessing_utils.html#preprocessing_utils.separate_and_save">[docs]</a><span class="k">def</span> <span class="nf">separate_and_save</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">names</span><span class="p">,</span> <span class="n">sep_col</span><span class="o">=</span><span class="s1">&#39;symbol&#39;</span><span class="p">,</span>
                       <span class="n">path_to_save</span><span class="o">=</span><span class="s1">&#39;data/&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Splits the table into several small tables according to the value</span>
 <span class="sd">    of the ``sep_col`` column.</span>
 
@@ -111,7 +111,7 @@
 
 <div class="viewcode-block" id="load_tables"><a class="viewcode-back" href="../text/preprocessing_utils.html#preprocessing_utils.load_tables">[docs]</a><span class="k">def</span> <span class="nf">load_tables</span><span class="p">(</span><span class="n">names</span><span class="p">,</span>
                 <span class="n">path_from</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reads tables from ``path_from`` address with names from the list ``names`` into the dictionary.</span>
 
 <span class="sd">    :param names: List[str]: table names</span>
@@ -132,7 +132,7 @@
 <div class="viewcode-block" id="save_tables"><a class="viewcode-back" href="../text/preprocessing_utils.html#preprocessing_utils.save_tables">[docs]</a><span class="k">def</span> <span class="nf">save_tables</span><span class="p">(</span><span class="n">df_dict</span><span class="p">,</span>
                 <span class="n">names</span><span class="p">,</span>
                 <span class="n">path_to</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Saves tables from ``df_dict`` dictionary with keys from `names`` list.</span>
 
 <span class="sd">    :param df_dict: Dict[str, pd.DataFrame]: dictionary with dataframes</span>
@@ -144,7 +144,7 @@
 
 
 <div class="viewcode-block" id="quantize_table"><a class="viewcode-back" href="../text/preprocessing_utils.html#preprocessing_utils.quantize_table">[docs]</a><span class="k">def</span> <span class="nf">quantize_table</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s1">&#39;300ms&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns a dataframe quantized by ``freq``-sized windows. Inside each window it calculates</span>
 <span class="sd">    some statistics (mean, median, standard deviation, and others).</span>
 

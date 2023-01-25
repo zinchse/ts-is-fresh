@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>selection_utils module &mdash; TS IS FRESH 0.0.1 documentation</title>
@@ -89,13 +89,13 @@
 <span class="sig-prename descclassname"><span class="pre">selection_utils.</span></span><span class="sig-name descname"><span class="pre">get_fitted_models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_jobs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/selection_utils.html#get_fitted_models"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#selection_utils.get_fitted_models" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the trained model for each <code class="docutils literal notranslate"><span class="pre">train_list</span></code> dataframe.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>train_list</strong> – List[pd.DataFrame]: training data list</p></li>
 <li><p><strong>n_jobs</strong> – int: number of cores for parallel learning</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List[xgboost.sklearn.XGBRegressor]: list fitted <code class="docutils literal notranslate"><span class="pre">XGBRegressor</span></code> models</p>
 </dd>
 </dl>
@@ -108,14 +108,14 @@
 and the shap algorithm, it calculates the importance of the features on all
 training data, normalizes and averages them.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>models</strong> – List[xgboost.sklearn.XGBRegressor]: the list of trained models</p></li>
 <li><p><strong>train_list</strong> – List[pd.DataFrame]: the list of training data</p></li>
 <li><p><strong>mode</strong> – str:  importance calculating mode</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Dict[str, float]: dictionary, its keys are the features from the training data,
 and the values are the calculated importance</p>
 </dd>
@@ -128,13 +128,13 @@ and the values are the calculated importance</p>
 <dd><p>Using statistical criteria, calculates the significance of the features
 for each block in the list. Then the obtained <code class="docutils literal notranslate"><span class="pre">p_value</span></code> s are averaged.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>blocks</strong> – List[pd.DataFrame]: list of datas with <code class="docutils literal notranslate"><span class="pre">target</span></code> column and the same scheme</p></li>
 <li><p><strong>n_jobs</strong> – int: the number of cores that can be used in the calculation of stat values</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>pd.DataFrame: df with calculated <code class="docutils literal notranslate"><span class="pre">p_value</span></code> for each of the attributes</p>
 </dd>
 </dl>
@@ -147,13 +147,13 @@ for each block in the list. Then the obtained <code class="docutils literal notr
 the best of them, which contain the <code class="docutils literal notranslate"><span class="pre">portion</span></code> % of the importance
 of all the features.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>importance_dict</strong> – Dict[str, float]: a dictionary with the importance of each feature</p></li>
 <li><p><strong>portion</strong> – float: portion of the importance of all the features to be ensured</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List[Tuple[str, float]]: a minimum number of features, the overall importance of which &gt;= <code class="docutils literal notranslate"><span class="pre">portion</span></code></p>
 </dd>
 </dl>
@@ -171,10 +171,10 @@ the representative with the lowest <code class="docutils literal notranslate"><s
 table is sorted by <code class="docutils literal notranslate"><span class="pre">p_value</span></code>, factorization is easy to implement
 through a set.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>relevance_table</strong> – pd.DataFrame: a table with the calculated features and their statistical significance</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>List[str]: a list of names of relevant low-correlated features from <code class="docutils literal notranslate"><span class="pre">relevance_table</span></code>.</p>
 </dd>
 </dl>
