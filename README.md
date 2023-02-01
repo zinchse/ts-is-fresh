@@ -6,7 +6,7 @@
 It is **T**ime **S**eries **I**mportance based **S**election and **F**eatu**R**e **E**xtraction on basis of **S**calable **H**ypothesis tests. 
 
 Algorithm implements the 
-idea of combining the selection of features by their importance and the generation of features using the [**[tsfresh]**](https://github.com/blue-yonder/tsfresh) library :)
+idea of combining the selection of features by their importance and the generation of features using the [[tsfresh]](https://github.com/blue-yonder/tsfresh) library :)
 
 Detailed documentation can be found here [**[DOCS]**](https://ts-is-fresh.readthedocs.io/en/latest/index.html#)
 
@@ -14,13 +14,13 @@ Detailed documentation can be found here [**[DOCS]**](https://ts-is-fresh.readth
 ## Overview 
 
 **At the first step,** the algorithm tries to understand which features of one time series can be useful.
-To do this, it generates a huge number of statistical features using the library. Then he selects them using statistical hypotheses and feature importance.
+To do this, it generates a huge number of statistical features using the library. Then he selects them using statistical hypotheses and feature importance values.
 ![first_stage_ts-is-fresh](https://user-images.githubusercontent.com/58306690/213933487-bb2b0480-cd81-4bd1-add0-1669e35cda35.svg)
 
 
 **At the second step,** the algorithm uses information about which features were selected from the previous stage. 
-For all available time series (target currency and other currencies on the exchange), these signs are calculated. 
-After that, they also go through two stages of selection - statistical and selection based on importance indicators.
+For all available time series (target currency and other currencies on the exchange), these features are calculated. 
+After that, they also go through two stages of selection - statistical and selection based on importance values.
 ![second_stage_ts-is-fresh](https://user-images.githubusercontent.com/58306690/213933493-de89a076-dd81-495d-a374-bff49600cd77.svg)
 
 ## Results
@@ -47,7 +47,7 @@ With feature importance we reduce the learning time of the model by a factor of 
 Comparison of metrics taking into account contextual information (combining features from the first step for highly correlated time series). 
 The metrics after selection are also shown.
 
-|.                  |Time (s)|RMSE mean|RMSE l=1|RMSE l=2|RMSE l=3|RMSE l=4|RMSE l=5|RMSE l=6|RMSE l=7|RMSE l=8|RMSE l=9|RMSE l=10|RMSE l=11|RMSE l=12|RMSE l=13|RMSE l=14|RMSE l=15|RMSE l=16|RMSE l=17|RMSE l=18|RMSE l=19|RMSE l=20|
+|                   |Time (s)|RMSE mean|RMSE l=1|RMSE l=2|RMSE l=3|RMSE l=4|RMSE l=5|RMSE l=6|RMSE l=7|RMSE l=8|RMSE l=9|RMSE l=10|RMSE l=11|RMSE l=12|RMSE l=13|RMSE l=14|RMSE l=15|RMSE l=16|RMSE l=17|RMSE l=18|RMSE l=19|RMSE l=20|
 |-------------------|--------|---------|--------|--------|--------|--------|--------|--------|--------|--------|--------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|---------|
 |only target table  |1.3     |0.118    |0.12    |0.103   |0.1     |0.102   |0.097   |0.116   |0.12    |0.123   |0.124   |0.128    |0.124    |0.128    |0.127    |0.125    |0.123    |0.12     |0.12     |0.119    |0.117    |0.116    |
 |with the features of other tables|10.04   |0.096    |0.074   |0.079   |0.081   |0.08    |0.072   |0.103   |0.103   |0.106   |0.103   |0.102    |0.101    |0.106    |0.105    |0.106    |0.103    |0.101    |0.102    |0.101    |0.099    |0.098    |
@@ -82,8 +82,7 @@ xgboost==1.5.2
 **data and runs.**
 
 The experiments were run on real data from the stock exchange in one day. The sizes are on the order of several hundred million records.
-You can download the dataset from this [[link]](https://drive.google.com/file/d/10cPodvJYP7MEM_6XfAMF99YiDlDxv8wL/view) (and put it into `/data`). Also you can reproduce the results using `/notebooks` (during the execution, the date folder
-will be filled in as needed).
+You can download the dataset from this [[link]](https://drive.google.com/file/d/10cPodvJYP7MEM_6XfAMF99YiDlDxv8wL/view) (and put it into `/data`). Also you can reproduce the results using `/notebooks` (during the execution, the date folder will be filled in as needed).
 
 **file structure.**
 
