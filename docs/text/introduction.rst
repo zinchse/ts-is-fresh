@@ -5,17 +5,17 @@ Introduction
 Overview
 --------
 
-Hereinafter, by **ts-is-fresh** we will mean the idea of combining ``tsfresh``, ``block cross validation``, and
+Hereinafter, by ``ts-is-fresh`` we will mean the idea of combining ``tsfresh``, ``block cross validation``, and
 ``feature importance selection``.
 
 The ``ts-is-fresh`` combines the automatic search for significant features, which is very important
-for high-frequency trading. In a situation where a huge number of trades occur every second, and with the rapidly
+for HFT. In a situation where a huge number of trades occur every second, and with the rapidly
 changing market, it is impossible to "hand-assess" the situation. It is necessary to build systems, which are able to
 select the important information and use it for increasing the accuracy of forecasts. Since ``tsfresh`` can calculate
 a huge number of features and many of them take quite a long time to calculate, an additional selection of features
-from ``tsfresh`` has been implemented to be used within the **ts-is-fresh** algorithm.
+from ``tsfresh`` has been implemented to be used within the ``ts-is-fresh`` algorithm.
 
-Also, thanks to the ``block cross validation`` **ts-is-fresh** pays attention not only to the latest changes in the time
+Also, thanks to the ``block cross validation`` ``ts-is-fresh`` pays attention not only to the latest changes in the time
 series, but also to the market behavior over the whole time range. Broadly speaking, ``block cross validation`` evenly
 divides the whole time series into blocks, at each block different statistics (``p_values``, ``feature_importance``,
 metrics, etc.) are counted, and then these indicators are averaged. Thanks to this technique, we do not focus our
@@ -25,10 +25,10 @@ entire structure of the time series, does not change the sequence of events, and
 To learn more about how block cross-validation works, see :ref:`Algorithm`.
 
 
-What problem does **ts-is-fresh** solve?
+What problem does ``ts-is-fresh`` solve?
 ----------------------------------------
 
-**ts-is-fresh** is built to construct new features for predicting cryptocurrency prices on exchanges.
+``ts-is-fresh`` is built to construct new features for predicting cryptocurrency prices on exchanges.
 Because of the high frequency of trading in this area, the built solution must work **very quickly** and **not require**
 **manual debugging**. For this reason it is necessary not only to build additional features, which will help increase
 the accuracy of the predictions, but also to **limit their size**! We can't afford a long inference of models,

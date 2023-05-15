@@ -3,9 +3,13 @@ Algorithm
 
 Preprocessing
 -------------
-First of all, for ease of working with time series, we **quantize** its values over a certain interval within which we
-want to trust the predictions. In our case it is ``300ms``. When quantizing, we use various aggregation functions that
-allow us to preserve information about the original time series.
+
+First of all, for ease of working with time series, we **quantize** its values
+over a certain interval within which we want to trust the predictions.
+In our case it is ``300ms``. During the quantization process, we leverage
+various aggregation functions to retain essential information from the
+original time series. This approach ensures that the resulting quantized
+data encapsulates relevant characteristics of the underlying trends and patterns.
 
 This part is solved with the function :func:`preprocessing_utils.quantize_table`.
 
@@ -18,14 +22,18 @@ The basic version of the algorithm - working with a single time series
 
 **Statistical selection.**
 
-Since we want to generate statistical features using the ``tsfresh`` library, we need to take some windows for each
-point of the time series (some number of nearest points of the time series from the past). In each such window we can
-read a huge number of different functions (statistics of different criteria, asymmetry measures, quantiles, medians,
-and so on).
+In order to generate statistical features using the ``tsfresh`` library, we
+employ a windowing technique. This involves selecting a specific number
+of neighboring points from the past for each point in the time series.
+Within each window, we can extract a wide range of statistical functions
+such as criteria statistics, asymmetry measures, quantiles, medians, and more.
+By considering these diverse functions, we capture valuable insights and
+characteristics from the time series data, enabling us to derive meaningful
+statistical features for further analysis and modeling.
 
 After that, **using statistical criteria**, we will select among the constructed features only those that have great
 statistical significance in predicting the target value. This will allow us to narrow the dimensionality of the feature
-space for the first time (in practice, from about 800 to 100-200 features).
+space for the first time (in practice, from  800 to 100 features).
 
 This part is solved with the function :func:`extraction_utils.bcv_extract_features`.
 
@@ -63,12 +71,20 @@ Advanced version of the algorithm - take into account the context
    :width: 90 %
    :align: center
 
-In practice, a large number of currencies are always traded, we can take this information into account!
-Of course, we will not be able to take into account all currencies - the growth in the number of parameters is too
-large. So it was decided to select 10 currencies that have the **highest correlation** with the target currency.
-In our case, correlation is the Euclidean distance between vectors of % price changes.
+In real-world scenarios, numerous currencies are actively traded, and we can
+leverage this information in our analysis. However, considering all currencies
+simultaneously would lead to an excessively large number of parameters,
+making the task computationally challenging. Therefore, we employ a selection
+process to identify the top 10 currencies that exhibit the highest correlation
+with the target currency.
 
-After that, for each of the currencies, we calculated the features that were selected for the target currency in the
-previous step. Combined the information obtained into one large table. And again started the cycle of work with one
-time series. At the output, we get features selected statistically and with the help of importance values, calculated
-both for the target currency and for others!
+To quantify correlation, we calculate the Euclidean distance between the vectors
+of percentage price changes. This allows us to identify the currencies that are
+most closely aligned with the target currency's price movements.
+
+After that, for each of the currencies, we calculated the features
+that were selected for the target currency in the
+previous step. Combined the information obtained into one large table.
+And run the cycle of selection again, as in the case of a single time series.
+At the output, we get features selected statistically and with the help of
+importance values, calculated both for the target currency and for others!
