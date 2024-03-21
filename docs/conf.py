@@ -51,6 +51,6 @@ html_static_path = ['_static']
 
 html_context = {
     'display_github': True,
-    'github_repo': 'https://github.com/mordiggian174/hft_timeseries',
+    'github_repo': 'https://github.com/zinchse/ts-is-fresh',
     'guthub_button': True
 }
