@@ -7,7 +7,7 @@ sys.path.insert(0, os.path.abspath("../src"))
 
 
 project = 'TS IS FRESH'
-copyright = '2023, Zinchenko Sergey'
+copyright = '2024, Zinchenko Sergey'
 author = 'Zinchenko Sergey'
 release = '0.0.1'
 
@@ -32,6 +32,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 
 html_theme = 'sphinx_rtd_theme'
+
 html_theme_options = {
     'display_version': True,
     'prev_next_buttons_location': 'bottom',
