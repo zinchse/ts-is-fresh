@@ -20,9 +20,8 @@ The basic version of the algorithm - working with a single time series
    :width: 90 %
    :align: center
 
-**Statistical selection.**
 
-In order to generate statistical features using the ``tsfresh`` library, we
+**Feature creation.** In order to generate statistical features using the ``tsfresh`` library, we
 employ a windowing technique. This involves selecting a specific number
 of neighboring points from the past for each point in the time series.
 Within each window, we can extract a wide range of statistical functions
@@ -31,35 +30,33 @@ By considering these diverse functions, we capture valuable insights and
 characteristics from the time series data, enabling us to derive meaningful
 statistical features for further analysis and modeling.
 
-After that, **using statistical criteria**, we will select among the constructed features only those that have great
+This part is solved with the :func:`extraction_utils.bcv_extract_features` ans `tsfresh` lib.
+
+
+**Statistical selection.** After that, using statistical criteria, we will select among the constructed features only those that have great
 statistical significance in predicting the target value. This will allow us to narrow the dimensionality of the feature
-space for the first time (in practice, from  800 to 100 features).
+space for the first time (in practice, from  `800` to `100` features). Here we can group the features with 
+similar names under the assumption that such features are correlated.
+Only one best representative feature was left from each group.
 
-This part is solved with the function :func:`extraction_utils.bcv_extract_features`.
+Statistical significance is obtained using method :func:`selection_utils.get_stats`
 
-Since there are quite a lot of features selected by statistical methods, it was decided to get the feature importance
-and select the features with the highest values with the help of ``XGBR`` models.
-
-
-
-**Selection of uncorrelated features.**
-
-Note that we cannot use feature importance right away - we may have **highly correlated features**. The importance will
-be evenly distributed between such features, and we can randomly discard them. Since ``tsfresh`` computes a large
-number of similar features with different hyperparameters, we are bound to have correlated features! To combat this,
-we factorize all the features into the functions from which they were derived. And within each class we leave only the
+**Feature factorization.** Since there are quite a lot of features selected by 
+statistical methods, it was decided to add feature importance selection. But we can't do that, 
+because that our features may be *strongly correlated features*, in which case their 
+significance may be wrong. Since ``tsfresh`` computes a large number of similar features with 
+different hyperparameters, we need to find correlated ones. To do it,
+we *factorize* all the features into the functions from which they were derived. And within each class we leave only the
 representative with the highest ``p_value``. After that we will count feature importance on the remaining
-representatives.
+representatives. 
 
-Statistical significance is obtained using method :func:`selection_utils.get_stats`, and the selection of the best
-uncorrelated features using :func:`selection_utils.stats_select_features`.
+The selection of the best uncorrelated features is obtained using :func:`selection_utils.stats_select_features`.
 
-**Importance based selection.**
-
-On the selected uncorrelated features, we will train several ``XGBR`` models. Then for each of them we will count 6
-types of feature importance (including ``shap`` values). By normalizing and averaging the obtained values, we can rank
-the features according to their importance. By selecting features whose total importance reaches ``80%``, we get
-the **final set**!
+**Importance based selection.** On the selected uncorrelated features, we will 
+train several ``XGBR`` models. Then for each of them we will count 6
+types of feature importance (including ``shap`` values). By normalizing and averaging the 
+obtained values, we can rank the features according to their importance. 
+By selecting features whose total importance reaches ``80%``, we get the *final* set*!
 
 This part is solved with the functions :func:`selection_utils.get_importance`,
 :func:`selection_utils.importance_select_features`.
@@ -71,17 +68,17 @@ Advanced version of the algorithm - take into account the context
    :width: 90 %
    :align: center
 
+**Finding most relevant external information.** 
 In real-world scenarios, numerous currencies are actively traded, and we can
 leverage this information in our analysis. However, considering all currencies
 simultaneously would lead to an excessively large number of parameters,
 making the task computationally challenging. Therefore, we employ a selection
 process to identify the top 10 currencies that exhibit the highest correlation
-with the target currency.
-
-To quantify correlation, we calculate the Euclidean distance between the vectors
-of percentage price changes. This allows us to identify the currencies that are
+with the target currency. To quantify correlation, we calculate the Euclidean distance between the vectors
+of *percentage price changes*. This allows us to identify the currencies that are
 most closely aligned with the target currency's price movements.
 
+**Features aggregation.** 
 After that, for each of the currencies, we calculated the features
 that were selected for the target currency in the
 previous step. Combined the information obtained into one large table.
