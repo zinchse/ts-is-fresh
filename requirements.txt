@@ -4,3 +4,4 @@ tsfresh
 numba
 shap
 xgboost
+sphinx_rtd_theme
