@@ -46,6 +46,8 @@ Compared to the situation where we only use target currency data, we have the `2
 
 
 ## 🚀 Quick Start
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/zinchse/ts-is-fresh/blob/main/notebooks/toy_example.ipynb)
+
 
 The [[dataset]](https://drive.google.com/file/d/10cPodvJYP7MEM_6XfAMF99YiDlDxv8wL/view) size has order of several hundred million records.
 To reproduce my result You can extract it in `data/raw` folder and use .ipynb from `/notebooks`.
